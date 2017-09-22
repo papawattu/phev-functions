@@ -1,0 +1,28 @@
+{
+  "name": "phev-functions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rimraf lib",
+    "build": "npm run clean && babel src -d lib",
+    "deploy": "npm run build && gcloud beta functions deploy receiveMessages --stage-bucket phev --trigger-topic receive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/papawattu/phev-functions.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/papawattu/phev-functions/issues"
+  },
+  "homepage": "https://github.com/papawattu/phev-functions#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "rimraf": "^2.6.2"
+  }
+}
