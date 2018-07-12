@@ -1,5 +1,10 @@
+import { encode, decode, toMessageArray } from './encoder_decoder'
+import Store from './store'
+
+const { setRegister } = Store()
+
 const messageHandler = (message, cb) => {
-    console.log('Data ' + message)
+    toMessageArray(message).map(decode).map(setRegister)
     cb()
 }
 

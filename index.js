@@ -1,5 +1,9 @@
-const messageHandler = require('./lib/message-handler').default
+const devEvents = require('./lib/app').default
 
-exports.receiveMessages = (event, callback) => {
-  messageHandler(event.data.message,callback)
+exports.dev_events = (event, callback) => {
+
+  require('./lib/app').default(event.data)
+
+  callback()
 }
+exports.operations = require('./lib/operations').default
