@@ -7,3 +7,4 @@ exports.dev_events = (event, callback) => {
   callback()
 }
 exports.operations = require('./lib/operations').default
+exports.configChange = require('./lib/config-change').default

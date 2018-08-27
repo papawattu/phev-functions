@@ -3,10 +3,10 @@
       [
         "env", {
           "targets": {
-            "node": "current"
+            "node": "10"
           }
         }
       ]
     ],
-    "plugins": ["transform-object-rest-spread"]
+    "plugins": ["transform-object-rest-spread","transform-async-to-generator"]
   }

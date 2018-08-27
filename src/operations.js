@@ -105,10 +105,12 @@ const sendDataToDevice = (clientAndAuthAndDevice, deviceName, config) => new Pro
     clientAndAuthAndDevice.client.projects.locations.registries.devices.modifyCloudToDeviceConfig(request)
 })
 const operations = (req, res) => {
-
-    //   console.log('Head lights ' + JSON.stringify(req.body.headLightsOn))
-    //  console.log('Value ' + req.body.value)
-
+    if (req.method == 'OPTIONS') {
+        res.status(204).send('')
+    } else {
+        res.status(200).send(JSON.stringify({ status : "ok"}))
+    }
+ /*
     const projectId = 'phev-db3fa'
 
     const deviceId = 'my-device2'
@@ -145,7 +147,7 @@ const operations = (req, res) => {
         }).catch(err => {
             res.status(400).send(`${err}`)
         })
-    }
+    } */
 }
 
 export default operations
