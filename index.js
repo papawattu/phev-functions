@@ -8,3 +8,5 @@ exports.dev_events = (event, callback) => {
 }
 exports.operations = require('./lib/operations').default
 exports.configChange = require('./lib/config-change').default
+exports.alexa  = require('./lib/alexa').default
+exports.auth = require('./lib/auth').default

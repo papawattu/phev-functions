@@ -1,48 +1,40 @@
-import { getDeviceConfigs, setDeviceConfig } from './iot'
-//import { auth }  from 'google-auth-library'
-const {auth} = require('google-auth-library')
+import iot from '@google-cloud/iot'
+import _ from 'lodash'
 
 const getPayLoad = event => event.data.data
 
 const getPayLoadObject = event => JSON.parse(Buffer.from(getPayLoad(event), 'base64').toString()) 
 
-async function configChange(event, cb) {
+const configChange = (event, cb) => {
     
-    const iot = require('@google-cloud/iot');
-
-    var client = new iot.v1.DeviceManagerClient({
-  // optional auth parameters.
-    });
-    var formattedParent = client.registryPath('phev-db3fa', 'us-central1', 'my-registry');
-
-    client.listDevices({parent: formattedParent})
+    const client = new iot.v1.DeviceManagerClient({})
+    const formattedName = client.devicePath('phev-db3fa', 'us-central1', 'my-registry', 'my-device2')
+    
+    client.listDeviceConfigVersions({name: formattedName})
         .then(responses => {
-        const resources = responses[0];
-        for (let i = 0; i < resources.length; i += 1) {
-            console.log(resources[i])
-        }
-        cb()
+            const response = responses[0];
+            const config = JSON.parse(Buffer.from(response.deviceConfigs[0].binaryData, 'base64').toString())
+            config.state.connectedClients = 1 
+            const updatedConfig = _.merge({},config,getPayLoadObject(event))
+            
+            // console.log(JSON.stringify(updatedConfig))
+            
+            const data = Buffer.from(JSON.stringify(updatedConfig))
+            
+            const request = {
+                name: formattedName,
+                binaryData: data
+            }
+            client.modifyCloudToDeviceConfig(request)
+                .then(responses => {
+                    const response = responses[0]
+                    cb()
+             })
     })
     .catch(err => {
-        console.error(err);
+        console.error(err)
         cb()
-    });
-    //  const client = getIOTClient('my-device2', 'my-registry', 'phev-db3fa', 'us-central1')
-  //      .then(client => {
-  //          console.log('Client')
-  //      })
-/*
-    const client = await auth.getClient({
-        scopes: 'https://www.googleapis.com/auth/cloud-platform'
-    });
-    const projectId = await auth.getDefaultProjectId();
-    const url = `https://www.googleapis.com/dns/v1/projects/${projectId}`;
-    const res = await client.request({ url });
-    console.log(client)
-    const config = getDeviceConfigs( client, 'my-device2', 'my-registry', 'phev-db3fa', 'us-central1')
-
-    console.log('Config ' + JSON.stringify(config))
-*/  
+    })
 }
 
 export default configChange
