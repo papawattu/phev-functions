@@ -38,23 +38,16 @@ const handleOptions = (req,res) => {
         return false
     }
 }
-const sendConfigUpdate = (req,res) => {
-    const dataBuffer = Buffer.from(JSON.stringify(req.body))
-
-    pubsub
+const sendConfigUpdate = config => pubsub
         .topic(topicName)
         .publisher()
-        .publish(dataBuffer)
+        .publish(Buffer.from(JSON.stringify(config)))
             .then(results => {
-                const messageId = results[0];
-                res.status(200).send(JSON.stringify({ status : "ok", messageId: messageId}))
+                return results[0]
             })
             .catch(err => {
                 console.error('ERROR:', err)
-                res.status(500).send(JSON.stringify(err))
             })
-        
-}
 
 const operations = (req, res) => {
     
@@ -68,9 +61,14 @@ const operations = (req, res) => {
     if(token) {
         verify(token)
             .then(ticket => {
-                sendConfigUpdate(req,res)
-                console.log(JSON.stringify(ticket))
-                res.status(200).send('OK')
+                sendConfigUpdate(req.body)
+                    .then(messageId => {
+                        res.status(200).send('Message sent ' + messageId)
+                    })
+                    .catch(err => {
+                        console.error(err)
+                        res.status(500).send(err)
+                    })
             })
             .catch(err => {
                 console.error(err)

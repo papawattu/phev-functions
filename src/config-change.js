@@ -14,12 +14,13 @@ const configChange = (event, cb) => {
         .then(responses => {
             const response = responses[0];
             const config = JSON.parse(Buffer.from(response.deviceConfigs[0].binaryData, 'base64').toString())
+            config.state = {}
             config.state.connectedClients = 1 
-            const updatedConfig = _.merge({},config,getPayLoadObject(event))
+            const updatedConfig = _.merge({},getPayLoadObject(event),config)
             
             // console.log(JSON.stringify(updatedConfig))
             
-            const data = Buffer.from(JSON.stringify(updatedConfig))
+            const data = Buffer.from(JSON.stringify(updatedConfig,null,2))
             
             const request = {
                 name: formattedName,

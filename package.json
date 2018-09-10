@@ -14,6 +14,7 @@
     "deploy-local": "functions deploy dev_events --trigger-topic my-device-events",
     "deploy-config": "npm run build && gcloud beta functions deploy configChange --stage-bucket phev --trigger-topic config-change",
     "deploy-auth": "npm run build && gcloud beta functions deploy auth --stage-bucket phev --trigger-http",
+    "deploy-state": "npm run build && gcloud beta functions deploy state --stage-bucket phev --trigger-topic my-device-state",
     "deploy-alexa": "npm run build && gcloud beta functions deploy alexa --stage-bucket phev --trigger-http"
   },
   "repository": {
