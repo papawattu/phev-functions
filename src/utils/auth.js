@@ -1,3 +1,4 @@
+/*
 import { OAuth2Client } from 'google-auth-library'
 
 const clientId = '557258334399-k6u903i01e5b6uksqjf3q4n41okocu5n.apps.googleusercontent.com'
@@ -8,5 +9,10 @@ const verify = token =>
         idToken: token,
         audience: clientId,  
     })
+*/
+
+import admin from 'firebase-admin'
+
+const verify = token => admin.auth().verifyIdToken(token)
 
 export { verify }

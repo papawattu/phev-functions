@@ -15,4 +15,5 @@
 src
 node_modules
 #!include:.gitignore
+!firebase.json
 

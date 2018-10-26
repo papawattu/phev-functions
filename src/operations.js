@@ -1,25 +1,9 @@
-import Express from 'express'
-import bodyParser from 'body-parser'
-import cors from 'cors'
-import { google } from 'googleapis'
 import PubSub from '@google-cloud/pubsub'
-import { OAuth2Client } from 'google-auth-library'
-
-const clientId = '557258334399-k6u903i01e5b6uksqjf3q4n41okocu5n.apps.googleusercontent.com'
-const client = new OAuth2Client(clientId)
-
+import { verify } from './utils/auth'
 
 const pubsub = new PubSub()
 
 const topicName = 'config-change'
-
-const verify = token => 
-    client.verifyIdToken({
-        idToken: token,
-        audience: clientId,  // Specify the CLIENT_ID of the app that accesses the backend
-        // Or, if multiple clients access the backend:
-        //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
-    })
 
 const setCORSHeaders = res => {
     res.set('Content-Type', 'application/json')
