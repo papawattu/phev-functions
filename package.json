@@ -17,8 +17,7 @@
     "deploy-state": "npm run build && gcloud functions deploy state --stage-bucket phev --trigger-topic my-device-state",
     "deploy-alexa": "npm run build && gcloud functions deploy alexa --stage-bucket phev --trigger-http",
     "deploy-aircon-http": "npm run build && gcloud functions deploy airConHttp --stage-bucket phev --trigger-http",
-    "deploy-aircon-event" : "npm run build && gcloud functions deploy airConEvent --stage-bucket phev --trigger-topic my-device-events"
-  
+    "deploy-aircon-event": "npm run build && gcloud functions deploy airConEvent --stage-bucket phev --trigger-topic my-device-events"
   },
   "repository": {
     "type": "git",
@@ -38,7 +37,8 @@
     "babel-preset-env": "^1.7.0",
     "chai": "^4.1.2",
     "cross-env": "^5.0.5",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "sinon": "^7.1.0"
   },
   "dependencies": {
     "@google-cloud/datastore": "^1.4.2",
