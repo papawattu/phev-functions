@@ -10,18 +10,22 @@ class AirCon extends EventEmitter {
     async status(args) {
         const { jwt, deviceId } = args
         
-        const device = await this.device.get({jwt , deviceId})
-
-        if(!device) {
-            return { error : 'device not found'}
+        try {
+            const device = await this.device.get({jwt , deviceId})
+            if(!device) {
+                return { response : 'device not found'}
+            }
+    
+            const isCached = await this.store.has(deviceId)
+    
+            if(isCached) {
+                return this.store.get(deviceId)
+            }
+            return { status : null }
+        } catch (err) {
+            return err
         }
 
-        const isCached = await this.store.has(deviceId)
-
-        if(isCached) {
-            return this.store.get(deviceId)
-        }
-        return { status : null }
     }
     async subscribe(args) {
         const { deviceId } = args

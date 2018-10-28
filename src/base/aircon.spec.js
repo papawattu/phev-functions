@@ -10,10 +10,10 @@ describe('Air Con', () => {
     let sandbox = null;
     let device = { get : () => null }
     let deviceNoDevice = { get : () => null }
+    let deviceReject = { get : () => Promise.reject({Error : 'some error'}) }
     let events = { subscribe : () => null }
     let store = null 
-    let storeHasDevice = { has : () => null }
-
+    
 
     beforeEach(() => {
         store = new Cache()
@@ -61,9 +61,32 @@ describe('Air Con', () => {
         
         const aircon = new AirCon(deps)
         
-        aircon.status(request)
+        const response = await aircon.status(request)
         
+        assert.deepEqual(response, { response : 'device not found'})
         assert(deps.device.get.calledOnce,'Should call get device')
+        
+    })
+    it('Should handle device rejection', async () => {
+        const request = {
+            jwt : '1234',
+            device: '1234'
+        }
+        const deps = {
+            device : deviceReject,
+            store
+        }
+        
+        const aircon = new AirCon(deps)
+        
+        try {
+            aircon.status(request)
+        
+            throw new Error('Should not get here')
+        } catch (err) {
+            assert(err)
+        }
+        
         
     })
     it('Should call get device with correct args', async () => {
