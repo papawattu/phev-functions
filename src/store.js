@@ -21,6 +21,7 @@ const RegisterStore = (auth, register) => {
             store[register.register] = { data: register.data }
         },   
         get: id => Promise.resolve(store[id]),
+        has: async id => await get(id) !== undefined 
     }
 }
 
