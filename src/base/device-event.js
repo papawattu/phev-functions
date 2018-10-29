@@ -22,6 +22,7 @@ class DeviceEvents extends EventEmitter {
                     const subscription = results[0]
                     //this.event = this.event.bind(this)
                     subscription.on('message', this.event)
+                    this.on(deviceId, callback)
                     //this.emitter.addListener("test", this.handleTestEvent)
                     this.store.set(subscriptionName, { deviceId, callback,  subscription, callerId})
                 })

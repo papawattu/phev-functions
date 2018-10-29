@@ -42,7 +42,7 @@ class AirCon extends EventEmitter {
             
             this.store.set(deviceId, { status : null})
             this.events.subscribe({ deviceId : deviceId, callback : this.handleEvent })
-            this.events.on(deviceId, this.handleEvent)
+           // this.events.on(deviceId, this.handleEvent)
             
         }
     }
@@ -58,6 +58,22 @@ class AirCon extends EventEmitter {
                 this.emit('aircon',{ status : 'off' })
             }
         }
+    }
+    async update(args) {
+        const { status, jwt, deviceId } = args
+
+        try {
+            const device = await this.device.get({jwt , deviceId})
+
+            if(!device) {
+                return { response : 'device not found'}
+            }
+
+
+        } catch (err) {
+            return { error : err}
+        }
+    
     } 
 }
 

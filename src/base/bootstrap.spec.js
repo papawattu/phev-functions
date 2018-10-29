@@ -31,11 +31,11 @@ describe('Bootstrap', () => {
         //const response = await aircon.status(request)
         //deviceEvents.subscribe({callerId : 'aircon', deviceId : 'my-device', callback : message => console.log(JSON.stringify(message))})
         
-        //setInterval(async () => {
-        //    const response = await aircon.status({ deviceId : 'my-device2', jwt: 'xxx'})
-        //    console.log(response)
+        setInterval(async () => {
+            const response = await aircon.status({ deviceId : 'my-device2', jwt: 'xxx'})
+            console.log(response)
 
-        //},1000)
+        },1000)
     })
 
 })

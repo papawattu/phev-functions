@@ -12,7 +12,7 @@ const configChange = (event, cb) => {
     
     client.listDeviceConfigVersions({name: formattedName})
         .then(responses => {
-            const response = responses[0];
+            const response = responses[0]
             const config = JSON.parse(Buffer.from(response.deviceConfigs[0].binaryData, 'base64').toString())
             config.state = {}
             config.state.connectedClients = 1 
@@ -26,6 +26,10 @@ const configChange = (event, cb) => {
                 name: formattedName,
                 binaryData: data
             }
+            //client.sendCommandToDevice(request)
+            //    .then(response => {
+            //        cb()
+            //    })
             client.modifyCloudToDeviceConfig(request)
                 .then(responses => {
                     const response = responses[0]
