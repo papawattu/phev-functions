@@ -11,14 +11,16 @@ describe('Device Registry', () => {
     let store = null 
     let jwt = { verify : () => null }
     let jwtInvalid = { verify : () => null }
+    let jwtDifferentUser = { verify : () => null }
 
     beforeEach(() => {
         store = new Cache()
         
         sandbox = sinon.createSandbox();
 
-        sandbox.stub(jwt,'verify').returns(true)
-        sandbox.stub(jwtInvalid,'verify').returns(false)
+        sandbox.stub(jwt,'verify').returns({sub : 123})
+        sandbox.stub(jwtDifferentUser,'verify').returns({sub : 124})
+        sandbox.stub(jwtInvalid,'verify').rejects({error : 'Not authorised'})
         
         //sandbox.stub(deviceNoDevice,'get').resolves(null)
         //sandbox.stub(events,'subscribe').resolves(true)
@@ -52,7 +54,7 @@ describe('Device Registry', () => {
         }
     
         const deviceRegistry = new DeviceRegistry(deps)
-        deps.store.set('123', { deviceId : '123' })
+        deps.store.set('123', { deviceId : '123', uid : 123 })
         
         const device = await deviceRegistry.get({ deviceId : '123', jwt : 'xxxx' })
         
@@ -88,6 +90,33 @@ describe('Device Registry', () => {
         } catch (err) {
             
             assert.isNotNull(err)
+        }
+        
+    })
+    it('Should reject if user not allowed to control device', done => {
+    
+        const deps = {
+            jwt : jwtDifferentUser,
+            store
+        }
+    
+        deps.store.set('123', { deviceId : '123', uid : 123 })
+
+        const deviceRegistry = new DeviceRegistry(deps)
+        
+        try {
+            deviceRegistry.get({ deviceId : '123', jwt : 'yyyyy' })
+                .then(x => {
+                    assert.fail('Should not get here and returned ' + JSON.stringify(x))
+                    done()
+                })
+                .catch(err => {
+                    assert.deepEqual(err,{ error : 'Not Authorised'})
+                    done()
+                })
+        } catch (err) {
+            assert.fail('Should not get here and returned ' + JSON.stringify(err))
+            done()
         }
         
     })

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test mocha --require babel-polyfill --compilers js:babel-core/register --recursive ./src/**/*.spec.js",
+    "test": "cross-env NODE_ENV=test mocha --timeout 100000 --require babel-polyfill --compilers js:babel-core/register --recursive ./src/**/*.spec.js",
     "clean": "rimraf lib",
     "build": "npm run clean && babel src -d lib",
     "deploy-receive": "npm run build && gcloud functions deploy receiveMessages --stage-bucket phev --trigger-topic receive",

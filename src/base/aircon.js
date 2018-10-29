@@ -6,12 +6,14 @@ class AirCon extends EventEmitter {
         this.device = deps.device
         this.events = deps.events
         this.store = deps.store
+        this.handleEvent = this.handleEvent.bind(this)
     }
     async status(args) {
         const { jwt, deviceId } = args
         
         try {
             const device = await this.device.get({jwt , deviceId})
+
             if(!device) {
                 return { response : 'device not found'}
             }
@@ -20,8 +22,11 @@ class AirCon extends EventEmitter {
     
             if(isCached) {
                 return this.store.get(deviceId)
+            } else {
+                this.subscribe({ deviceId })
+                return { status : null }
             }
-            return { status : null }
+            
         } catch (err) {
             return err
         }
@@ -30,22 +35,27 @@ class AirCon extends EventEmitter {
     async subscribe(args) {
         const { deviceId } = args
         
-        const deviceAlreadySubcribed = await this.store.has(deviceId)
+        const deviceAlreadySubscribed = await this.store.has(deviceId)
         
-        if(!deviceAlreadySubcribed)
+        if(!deviceAlreadySubscribed)
         {
-            return this.events.subscribe({ deviceId : deviceId, aircon : this })
+            
+            this.store.set(deviceId, { status : null})
+            this.events.subscribe({ deviceId : deviceId, callback : this.handleEvent })
+            this.events.on(deviceId, this.handleEvent)
+            
         }
     }
     handleEvent(event) {
         
         const { deviceId, register, data } = event
-
         if(register === 26) {
             if(data[1] === 1) {
                 this.store.set(deviceId, { status : 'on'})
+                this.emit('aircon',{ status : 'on' })
             } else {
                 this.store.set(deviceId, { status : 'off'})
+                this.emit('aircon',{ status : 'off' })
             }
         }
     } 

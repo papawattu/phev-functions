@@ -11,7 +11,7 @@ describe('Air Con', () => {
     let device = { get : () => null }
     let deviceNoDevice = { get : () => null }
     let deviceReject = { get : () => Promise.reject({Error : 'some error'}) }
-    let events = { subscribe : () => null }
+    let events = { subscribe : () => null, on : () => null}
     let store = null 
     
 
@@ -23,7 +23,7 @@ describe('Air Con', () => {
         sandbox.stub(device,'get').resolves({ deviceId: '123' })
         sandbox.stub(deviceNoDevice,'get').resolves(null)
         sandbox.stub(events,'subscribe').resolves(true)
-
+        sandbox.stub(events,'on') //.resolves(true)
     })
     afterEach(() => {
         sandbox.restore()
@@ -202,7 +202,7 @@ describe('Air Con', () => {
 
         await aircon.subscribe({ deviceId : '123' })
         
-        assert(deps.events.subscribe.calledWith({ deviceId : '123', aircon : aircon }))
+        assert(deps.events.on.calledWith('123', aircon.handleEvent))
     })
     it('Should not subscribe twice', async () => {
         const deps = {
@@ -219,6 +219,28 @@ describe('Air Con', () => {
         await aircon.subscribe({ deviceId : '123' })
         
         assert(deps.events.subscribe.notCalled,'Should not call subscribe twice')
+    })
+    it('Should emit status on event', done => {
+        const request = {
+            jwt : '1234',
+            deviceId: '123'
+        }
+        const deps = {
+            device,
+            store
+        }
+        
+        const aircon = new AirCon(deps)
+        
+        aircon.on('aircon', x => {
+            assert.deepEqual(x, {status : 'on'})
+            done()
+        })
+
+        aircon.handleEvent({ deviceId : '123', register : 26, data : [0,1]})
+
+        aircon.status(request)
+        
     })
     
 })
