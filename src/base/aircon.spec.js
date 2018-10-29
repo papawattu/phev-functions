@@ -35,11 +35,12 @@ describe('Air Con', () => {
     it('Should call get device', async () => {
         const request = {
             jwt : '1234',
-            device: '123'
+            device: '123',
         }
         const deps = {
             device,
-            store
+            store,
+            events
         }
         
         const aircon = new AirCon(deps)
@@ -56,7 +57,8 @@ describe('Air Con', () => {
         }
         const deps = {
             device : deviceNoDevice,
-            store
+            store,
+            events
         }
         
         const aircon = new AirCon(deps)
@@ -74,7 +76,8 @@ describe('Air Con', () => {
         }
         const deps = {
             device : deviceReject,
-            store
+            store,
+            events
         }
         
         const aircon = new AirCon(deps)
@@ -96,7 +99,8 @@ describe('Air Con', () => {
         }
         const deps = {
             device,
-            store
+            store,
+            events
         }
         
         const aircon = new AirCon(deps)
@@ -113,7 +117,8 @@ describe('Air Con', () => {
         }
         const deps = {
             device,
-            store
+            store,
+            events
         }
         
         const aircon = new AirCon(deps)
@@ -129,7 +134,8 @@ describe('Air Con', () => {
         }
         const deps = {
             device,
-            store
+            store,
+            events
         }
         
         const aircon = new AirCon(deps)
@@ -144,7 +150,8 @@ describe('Air Con', () => {
         }
         const deps = {
             device,
-            store
+            store,
+            events
         }
         
         const aircon = new AirCon(deps)
@@ -162,7 +169,8 @@ describe('Air Con', () => {
         }
         const deps = {
             device,
-            store
+            store,
+            events
         }
         
         const aircon = new AirCon(deps)
@@ -180,7 +188,8 @@ describe('Air Con', () => {
         }
         const deps = {
             device,
-            store
+            store,
+            events
         }
         
         const aircon = new AirCon(deps)
